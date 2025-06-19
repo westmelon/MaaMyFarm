@@ -1,0 +1,137 @@
+{
+    "StartCollect": {
+        "timeout": 3000,
+        "next": [
+            "FindGrape",
+            "BeforePlantGrape"
+        ],
+        "interrupt": [
+            "Offline",
+            "ClosePage"
+        ]
+    },
+    "FindCorn": {
+        "recognition": "TemplateMatch",
+        "template": "corn.png",
+        "action": "DoNothing",
+        "next": [
+            "CollectCorn"
+        ]
+    },
+    "CollectCorn": {
+        "recognition": "TemplateMatch",
+        "template": "corn_growup.png",
+        "action": "Click",
+        "post_delay": 1500,
+        "next": [
+            "BeforePlantGrape"
+        ]
+    },
+    "BeforePlantCorn": {
+        "recognition": "TemplateMatch",
+        "template": "empty_ground.png",
+        "action": "Click",
+        "post_delay": 500,
+        // "next": "PlantCorn",
+        "timeout": 2000,
+        "on_error": [
+            "BeforePlantCorn2"
+        ]
+    },
+    "BeforePlantCorn2": {
+        "recognition": "TemplateMatch",
+        "template": "seed.png",
+        "action": "Click",
+        "post_delay": 500,
+        "next": [
+            "PlantCorn"
+        ]
+    },
+    "PlantCorn": {
+        "recognition": "TemplateMatch",
+        "template": "corn_seed.png",
+        "threshold": 0.9,
+        "action": "Click",
+        "post_delay": 500,
+        "timeout": 2000,
+        "next": [
+            "BeforePlantCorn"
+        ]
+    },
+    "FindGrape": {
+        "recognition": "TemplateMatch",
+        "template": "grape.png",
+        "action": "DoNothing",
+        "threshold": 0.65,
+        "next": [
+            "CollectGrape"
+        ]
+    },
+    "CollectGrape": {
+        "recognition": "TemplateMatch",
+        "template": "grape_growup.png",
+        "action": "Click",
+        "target_offset": [
+            20,
+            10,
+            0,
+            0
+        ],
+        "post_delay": 3000,
+        "next": [
+            "BeforePlantGrape"
+        ]
+    },
+    "BeforePlantGrape": {
+        "recognition": "TemplateMatch",
+        "template": "empty_ground.png",
+        "action": "Click",
+        "post_delay": 500,
+        "threshold": 0.65,
+        "next": [
+            "PlantGrape"
+        ],
+        "timeout": 2000,
+        "on_error": [
+            "BeforePlantGrape2"
+        ]
+    },
+    "BeforePlantGrape2": {
+        "recognition": "TemplateMatch",
+        "template": "seed.png",
+        "action": "Click",
+        "post_delay": 500,
+        "threshold": 0.65,
+        "next": [
+            "PlantGrape"
+        ],
+        "on_error": [
+            "BeforePlantGrape3"
+        ]
+    },
+    "BeforePlantGrape3": {
+        "recognition": "TemplateMatch",
+        "template": "empty_ground2.png",
+        "action": "Click",
+        "post_delay": 500,
+        "next": [
+            "PlantGrape"
+        ]
+    },
+    "PlantGrape": {
+        "recognition": "TemplateMatch",
+        "template": "grape_seed.png",
+        "threshold": 0.9,
+        "action": "Click",
+        "post_delay": 1000,
+        "timeout": 2000,
+        "next": [
+            "BeforePlantGrape"
+        ]
+    },
+    "StopPlant": {
+        "recognition": "OCR",
+        "expected": "所有农田都已播种",
+        "action": "StopTask"
+    }
+}

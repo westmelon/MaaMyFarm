@@ -1,0 +1,136 @@
+{
+    "Home": {
+        "recognition": "TemplateMatch",
+        "template": "home_task.png",
+        "threshold": 1,
+        "action": "DoNothing",
+        "next": "Home2"
+    },
+    "Home2": {
+        "action": "DoNothing",
+        "next": "Bingo",
+        "timeout": 10000,
+        "interrupt": "ZoomDown"
+    },
+    "Bingo": {
+        "recognition": "TemplateMatch",
+        "template": "ref.png",
+        "threshold": 0.9,
+        "action": "DoNothing"
+    },
+    "BackToHome": {
+        "recognition": "DirectHit",
+        "action": "DoNothing",
+        "next": [
+            "Home"
+        ],
+        "interrupt": [
+            "ClosePage"
+        ]
+    },
+    "ClosePage": {
+        "recognition": "TemplateMatch",
+        "template": "close_btn.png",
+        "action": "Click",
+        "post_delay": 1000
+    },
+    "Zoom1": {
+        "recognition": "DirectHit",
+        "post_delay": 500,
+        "next": [
+            "ZoomUp",
+            "Zoom2"
+        ]
+    },
+    "Zoom2": {
+        "recognition": "DirectHit",
+        "post_delay": 500,
+        "next": [
+            "ZoomUp",
+            "Zoom3"
+        ]
+    },
+    "Zoom3": {
+        "recognition": "DirectHit",
+        "post_delay": 500,
+        "next": [
+            "ZoomUp",
+            "Zoom4"
+        ]
+    },
+    "Zoom4": {
+        "recognition": "DirectHit",
+        "post_delay": 500,
+        "next": "ZoomUp"
+    },
+    "ZoomUp": {
+        "action": "MultiSwipe",
+        "swipes": [
+            {
+                "begin": [
+                    567,
+                    666,
+                    0,
+                    0
+                ],
+                "end": [
+                    555,
+                    683,
+                    0,
+                    0
+                ],
+                "duration": 200
+            },
+            {
+                "begin": [
+                    691,
+                    652,
+                    0,
+                    0
+                ],
+                "end": [
+                    700,
+                    640,
+                    0,
+                    0
+                ],
+                "duration": 200
+            }
+        ]
+    },
+    "ZoomDown": {
+        "action": "MultiSwipe",
+        "swipes": [
+            {
+                "begin": [
+                    690,
+                    710,
+                    0,
+                    0
+                ],
+                "end": [
+                    700,
+                    680,
+                    0,
+                    0
+                ],
+                "duration": 200
+            },
+            {
+                "begin": [
+                    790,
+                    610,
+                    0,
+                    0
+                ],
+                "end": [
+                    780,
+                    620,
+                    0,
+                    0
+                ],
+                "duration": 200
+            }
+        ]
+    }
+}

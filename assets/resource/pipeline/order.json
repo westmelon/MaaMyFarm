@@ -1,0 +1,56 @@
+{
+    "StartOrder": {
+        "next": [
+            "FindRabbitOrder",
+            "FindMarmotOrder"
+        ]
+    },
+    "FindRabbitOrder": {
+        "recognition": "TemplateMatch",
+        "template": "order_rabbit.png",
+        "action": "Click",
+        "next": [
+            "SubmitOrder"
+        ]
+    },
+    "FindMarmotOrder": {
+        "recognition": "TemplateMatch",
+        "template": "order_marmot.png",
+        "action": "DoNothing"
+        // "next": [
+        //     "SubmitOrder"
+        // ]
+    },
+    "SubmitOrder": {
+        "recognition": "OCR",
+        "expected": "兑换",
+        "action": "Click",
+        "post_delay": 500,
+        "next": [
+            "DetectEnough"
+        ]
+    },
+    "DetectEnough": {
+        "recognition": "OCR",
+        "expected": "购买缺少的食材",
+        "action": "DoNothing",
+        "next": [
+            "CloseBuyCrops"
+        ]
+    },
+    "CloseBuyCrops": {
+        "recognition": "TemplateMatch",
+        "template": "close_btn.png",
+        "action": "Click",
+        "post_delay": 1000,
+        "next": [
+            "CloseOrder"
+        ]
+    },
+    "CloseOrder": {
+        "recognition": "TemplateMatch",
+        "template": "close_btn.png",
+        "post_delay": 500,
+        "action": "Click"
+    }
+}
