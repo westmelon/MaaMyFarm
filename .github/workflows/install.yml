@@ -125,10 +125,10 @@ jobs:
           cp -r MFAAvalonia/* install
           rm -rf install/MFAAvalonia-*${{ steps.mfa_naming.outputs.mfa_os }}-${{ steps.mfa_naming.outputs.mfa_arch }}*
 
-      - name: Replace Icon
-        shell: bash
-        run: |
-          cp logo.ico install/logo.ico
+      # - name: Replace Icon
+      #   shell: bash
+      #   run: |
+      #     cp logo.ico install/logo.ico
 
       - uses: actions/upload-artifact@v4
         with:
