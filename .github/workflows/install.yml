@@ -51,11 +51,11 @@ jobs:
 
   install:
     needs: meta
-    runs-on: macos-latest
+    runs-on: windows-latest
     strategy:
       matrix:
-        os: [win, osx, linux]
-        arch: [arm64, x64]
+        os: [win, macos, linux]
+        arch: [x86_64, aarch64]
       fail-fast: false
 
     steps:
@@ -63,17 +63,56 @@ jobs:
         with:
           submodules: true
 
-      - name: Install
+      - name: Download MaaFramework
+        uses: robinraju/release-downloader@v1
+        with:
+          repository: MaaXYZ/MaaFramework
+          fileName: "MAA-${{ matrix.os }}-${{ matrix.arch }}*"
+          latest: true
+          preRelease: false
+          out-file-path: "deps"
+          extract: true
+
+      - name: Setup Embed Python
+        shell: powershell
+        run: |
+          ./tools/ci/setup_embed_python.ps1
+
+      - name: Install Python
+        shell: bash
+        env:
+          TARGET_OS: ${{ matrix.os }}
+        run: |
+          python ./tools/install.py ${{ needs.meta.outputs.tag }}
+
+      - name: Set up MFAAvalonia naming
+        id: mfa_naming
         shell: bash
         run: |
-          python ./install.py ${{ needs.meta.outputs.tag }}
+          if [ "${{ matrix.os }}" = "win" ]; then
+            echo "mfa_os=win" >> $GITHUB_OUTPUT
+          elif [ "${{ matrix.os }}" = "macos" ]; then
+            echo "mfa_os=osx" >> $GITHUB_OUTPUT
+          elif [ "${{ matrix.os }}" = "linux" ]; then
+            echo "mfa_os=linux" >> $GITHUB_OUTPUT
+          else
+            echo "mfa_os=unknown" >> $GITHUB_OUTPUT
+          fi
+
+          if [ "${{ matrix.arch }}" = "x86_64" ]; then
+            echo "mfa_arch=x64" >> $GITHUB_OUTPUT
+          elif [ "${{ matrix.arch }}" = "aarch64" ]; then
+            echo "mfa_arch=arm64" >> $GITHUB_OUTPUT
+          else
+            echo "mfa_arch=unknown" >> $GITHUB_OUTPUT
+          fi
 
       - name: Download MFA
         if: ${{ matrix.os != 'android' }}
         uses: robinraju/release-downloader@v1
         with:
           repository: SweetSmellFox/MFAAvalonia
-          fileName: "MFAAvalonia-*-${{ matrix.os }}-${{ matrix.arch }}*"
+          fileName: "MFAAvalonia-*${{ steps.mfa_naming.outputs.mfa_os }}-${{ steps.mfa_naming.outputs.mfa_arch }}*"
           latest: true
           out-file-path: "MFAAvalonia"
           extract: true
@@ -84,15 +123,42 @@ jobs:
         run: |
           rm -rf MFAAvalonia/resource/base/model
           cp -r MFAAvalonia/* install
+          rm -rf install/MFAAvalonia-*${{ steps.mfa_naming.outputs.mfa_os }}-${{ steps.mfa_naming.outputs.mfa_arch }}*
+
+      - name: Replace Icon
+        shell: bash
+        run: |
+          cp logo.ico install/logo.ico
 
       - uses: actions/upload-artifact@v4
         with:
-          name: MaaXXX-${{ matrix.os }}-${{ matrix.arch }}
+          name: MaaMyFarm-${{ matrix.os }}-${{ matrix.arch }}-${{ needs.meta.outputs.tag }}
           path: "install"
+
+  changelog:
+    name: Generate changelog
+    runs-on: ubuntu-latest
+    outputs:
+      release_body: ${{ steps.git-cliff.outputs.content }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          config: .github/cliff.toml
+          args: -vv --latest --strip header
+        env:
+          OUTPUT: CHANGES.md
+          GITHUB_REPO: ${{ github.repository }}
 
   release:
     if: ${{ needs.meta.outputs.is_release == 'true' }}
-    needs: install
+    needs: [meta, install, changelog]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -109,4 +175,18 @@ jobs:
         with:
           files: assets/*
           tag_name: ${{ needs.meta.outputs.tag }}
+          body: ${{ needs.changelog.outputs.release_body }}
+          draft: false
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: assets/*
+          tag_name: ${{ needs.meta.outputs.tag }}
           generate_release_notes: true
+
+      - name: Trigger MirrorChyanUploading
+        run: |
+          gh workflow run --repo $GITHUB_REPOSITORY mirrorchyan
+          gh workflow run --repo $GITHUB_REPOSITORY mirrorchyan_release_note
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
