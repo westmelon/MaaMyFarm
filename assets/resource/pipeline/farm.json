@@ -12,7 +12,7 @@
     },
     "FindCorn": {
         "recognition": "TemplateMatch",
-        "template": "corn.png",
+        "template": "crop_corn.png",
         "action": "DoNothing",
         "next": [
             "CollectCorn"
@@ -20,7 +20,7 @@
     },
     "CollectCorn": {
         "recognition": "TemplateMatch",
-        "template": "corn_growup.png",
+        "template": "crop_corn_growup.png",
         "action": "Click",
         "post_delay": 1500,
         "next": [
@@ -49,7 +49,7 @@
     },
     "PlantCorn": {
         "recognition": "TemplateMatch",
-        "template": "corn_seed.png",
+        "template": "seed_corn.png",
         "threshold": 0.9,
         "action": "Click",
         "post_delay": 500,
@@ -60,7 +60,7 @@
     },
     "FindGrape": {
         "recognition": "TemplateMatch",
-        "template": "grape.png",
+        "template": "crop_grape.png",
         "action": "DoNothing",
         "threshold": 0.65,
         "next": [
@@ -69,7 +69,7 @@
     },
     "CollectGrape": {
         "recognition": "TemplateMatch",
-        "template": "grape_growup.png",
+        "template": "crop_grape_growup.png",
         "action": "Click",
         "target_offset": [
             20,
@@ -120,7 +120,7 @@
     },
     "PlantGrape": {
         "recognition": "TemplateMatch",
-        "template": "grape_seed.png",
+        "template": "seed_grape.png",
         "threshold": 0.9,
         "action": "Click",
         "post_delay": 1000,

@@ -6,6 +6,18 @@
         "action": "DoNothing",
         "next": "Home2"
     },
+    "A": {
+        "recognition": "FeatureMatch",
+        "template": "building_wine_cocktail.png",
+        "threshold": 0.7,
+        "action": "Click",
+    },
+    "AA": {
+        "recognition": "TemplateMatch",
+        "template": "chest_1.png",
+        "threshold": 0.7,
+        "action": "DoNothing",
+    },
     "Home2": {
         "action": "DoNothing",
         "next": "Bingo",
@@ -14,9 +26,29 @@
     },
     "Bingo": {
         "recognition": "TemplateMatch",
-        "template": "ref.png",
+        "template": "chest_1.png",
+        "threshold": 0.7,
+        "action": "DoNothing",
+        "next": "Move"
+    },
+    "Move": {
+        "recognition": "TemplateMatch",
+        "template": "tree_ref.png",
         "threshold": 0.9,
-        "action": "DoNothing"
+        "action": "Swipe",
+        "duration": 1000,
+        "begin": [
+            658,
+            359,
+            0,
+            0
+        ],
+        "end": [
+            689,
+            652,
+            0,
+            0
+        ]
     },
     "BackToHome": {
         "recognition": "DirectHit",
