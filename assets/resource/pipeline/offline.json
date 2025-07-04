@@ -3,7 +3,8 @@
         "recognition": "OCR",
         "expected": "重新连接",
         "action": "Click",
-        "index": 1,
+        "index": 0,
+        "threshold": 0.9,
         "next": "BackToHome"
     }
 }

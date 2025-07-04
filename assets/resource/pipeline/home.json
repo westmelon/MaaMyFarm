@@ -2,21 +2,14 @@
     "Home": {
         "recognition": "TemplateMatch",
         "template": "home_task.png",
-        "threshold": 1,
+        "threshold": 0.9,
         "action": "DoNothing",
         "next": "Home2"
     },
     "A": {
-        "recognition": "FeatureMatch",
-        "template": "building_wine_cocktail.png",
-        "threshold": 0.7,
-        "action": "Click",
-    },
-    "AA": {
-        "recognition": "TemplateMatch",
-        "template": "chest_1.png",
-        "threshold": 0.7,
-        "action": "DoNothing",
+        "recognition": "DirectHit",
+        "action": "Custom",
+        "custom_action": "Collect",
     },
     "Home2": {
         "action": "DoNothing",
@@ -34,8 +27,9 @@
     "Move": {
         "recognition": "TemplateMatch",
         "template": "tree_ref.png",
-        "threshold": 0.9,
+        "threshold": 0.8,
         "action": "Swipe",
+        "timeout": 5000,
         "duration": 1000,
         "begin": [
             658,
